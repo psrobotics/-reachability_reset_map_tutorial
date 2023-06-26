@@ -41,6 +41,9 @@ params.u_bound = 1; % yaw input u limit
 params.R = R; % cycle_r
 params.alpha = 1.0;
 
+% other params for state rest condition
+params.o_params = [];
+
 %% solver setup
 schemeData.grid = grid;
 schemeData.uMode = 'min'; % control trying to min the cost fcn, reachable set

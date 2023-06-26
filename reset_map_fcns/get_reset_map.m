@@ -2,8 +2,8 @@
 function [reset_map, params] = get_reset_map(grid, params)
 
 % define state jump rules for all states, modify this based on your system
-x1_post_f = @(x) -x/2;
-x2_post_f = @(x) x;
+x1_post_f = @(x_t,o_params) -x_t(1)/2;
+x2_post_f = @(x_t,o_params) x_t(2);
 x3_post_f = @x_f3;
 state_fcn_arr = {x1_post_f; x2_post_f; x3_post_f};
 params.state_fcn_arr = state_fcn_arr;
@@ -26,12 +26,12 @@ for j = ind % loop through the reset map
     i_post = i_tmp;
 
     % check if this state satisify the state reset condition
-    if resetmap_trigger_event(grid, i_tmp)
+    if resetmap_trigger_event(grid, i_tmp, params.o_params)
         x_tmp = index2state(grid,i_tmp);
         x_post = x_tmp;
         % if so, calculate states after state jumping
         for k = 1:length(state_fcn_arr)
-            x_post(k) = state_fcn_arr{k}(x_tmp(k));
+            x_post(k) = state_fcn_arr{k}(x_tmp,params.o_params);
         end
         % convert back to corresponding grid indices
         i_post = state2index(grid, x_post);
@@ -46,16 +46,16 @@ reset_map = sub2ind(N, I1_reset, I2_reset, I3_reset);
 end
 
 % state jump rule for 3rd dim, yaw angle
-function x3_post = x_f3(x3)
+function x3_post = x_f3(x_t,o_params)
 % keep range of yaw angle within -pi~pi
-if x3 <= 0
-   x3_post = x3 + pi;
+if x_t(3) <= 0
+   x3_post = x_t(3) + pi;
 else
-   x3_post = x3 - pi;
+   x3_post = x_t(3) - pi;
 end
 end
 
-function is_reset = resetmap_trigger_event(grid, i_t)
+function is_reset = resetmap_trigger_event(grid, i_t, o_params)
 % check if the state reset condition has been triggered for current index
 % 1 - reset event triggered, 0 - others
 is_reset = 0;
@@ -66,6 +66,10 @@ x_ref = index2state(grid, i_t);
 if abs(x_ref(2))<eps && x_ref(3)<eps
     is_reset = 1;
 end
+% for multiple reset conditions
+% if condition_1 || condition_2 || ...condition_n
+%    is_reset = 1;
+% end
 end
 
 function i_t = state2index(grid, x_t)

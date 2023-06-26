@@ -34,7 +34,8 @@ if value_end < 0
     % Apply state reset
     x_post = zeros(3, 1);
     for i=1:length(params.state_fcn_arr)
-        x_post(i) = params.state_fcn_arr{i}(x_1(i));
+        x_post(i) =...
+            params.state_fcn_arr{i}(x_t, params.o_params);
     end
     obj.x = x_post;
 else
@@ -64,6 +65,12 @@ if x(2) < 0 && x(3) < 0
 else
     value = 1;
 end
+% for multiple reset conditions
+% if condition_1 || condition_2 || ...condition_n
+%    value = -1;
+% else
+%    value = 1;
+% end
 isterminal = 1;
 direction = 1;
 end

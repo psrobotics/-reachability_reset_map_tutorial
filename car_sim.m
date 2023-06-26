@@ -22,7 +22,7 @@ params.tar_pos = [0,4];
 params.tar_r = 0.5;
 
 %% create a set of random init states
-test_case_num = 2;
+test_case_num = 1;
 x0_arr = zeros(3,test_case_num);
 x0_arr(1,:) = (7.5-(-7.5)).*rand(test_case_num,1) - 7.5;
 x0_arr(2,:) = (3-0.5).*rand(test_case_num,1) - 0.5;
