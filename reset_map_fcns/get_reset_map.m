@@ -73,13 +73,13 @@ end
 end
 
 function i_t = state2index(grid, x_t)
-% convert current state to grid indices 
-grid_dx = (grid.max-grid.min)./grid.N;
-i_t = ceil((x_t-grid.min)./grid_dx);
+% convert current state to grid indices
+i_t = ceil((x_t-grid.min)./grid.dx)+1;
+i_t=min([max([ones(grid.dim,1) i_t],[],2) grid.N],[],2); %keep inside index bounds
 end
 
 function x_t = index2state(grid, i_t)
 % convert current grid index to state
-grid_dx = (grid.max-grid.min)./grid.N;
-x_t = i_t.*grid_dx + grid.min;
+% grid_dx = (grid.max-grid.min)./grid.N;
+x_t = (i_t-1).*grid.dx + grid.min;
 end
