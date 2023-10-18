@@ -1,2 +1,2 @@
-# -reachability_reset_map_tutorial
+# -reachability_reset_map_clean
 Reachability with reset map
